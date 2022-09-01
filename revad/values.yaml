@@ -188,11 +188,7 @@ configFiles:
     mock_http = false
 
     [grpc.services.ocmproviderauthorizer]
-    driver = "json"
-
-    [grpc.services.ocmproviderauthorizer.drivers.json]
-    providers = "/etc/revad/ocm-providers.json"
-    verify_request_hostname = true
+    driver = "open"
 
     [grpc.services.publicshareprovider]
     driver = "memory"
@@ -264,10 +260,7 @@ configFiles:
     provider = "test-revaoc1"
 
     [http.middlewares.providerauthorizer]
-    driver = "json"
-
-    [http.middlewares.providerauthorizer.drivers.json]
-    providers = "/etc/revad/ocm-providers.json"
+    driver = "open"
 
     [http.services.ocs]
     prefix = "ocs"
