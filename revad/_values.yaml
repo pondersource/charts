@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: cs3org/revad
-  tag: v2.7.0
+  tag: v1.18.0
   pullPolicy: Always
 
 service:
@@ -77,26 +77,23 @@ ingress:
   enabled: false
   services:
     http:
-      hostname: mesh.pondersource.org
-      path: /iop(/|$)(.*)
-      annotations: 
-        kubernetes.io/ingress.class: public
-        nginx.ingress.kubernetes.io/ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/use-regex: "true"
-        nginx.ingress.kubernetes.io/rewrite-target: /$2
-        nginx.ingress.kubernetes.io/proxy-body-size: 200m
+      hostname: http.revad.local
+      path: /
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # nginx.ingress.kubernetes.io/ssl-redirect: "true"
       tls: []
         # Secrets must be present in the namespace beforehand.
         # - secretName: http-revad-tls
         #   hosts:
         #     - http.revad.local
     grpc:
-      hostname: mesh.pondersource.org
+      hostname: grpc.revad.local
       path: /
-      annotations: 
-        kubernetes.io/ingress.class: public
-        nginx.ingress.kubernetes.io/ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        # nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
       tls: []
         # - secretName: grpc-revad-tls
         #   hosts:
@@ -127,33 +124,33 @@ configFiles:
     [http.services.ocs]
   oc.revad.toml: |
     [shared]
-    gatewaysvc = "ponder-revad:19000"
+    gatewaysvc = "localhost:19000"
 
     [grpc]
     address = "0.0.0.0:19000"
 
     [grpc.services.gateway]
-    authregistrysvc = "ponder-revad:19000"
-    appprovidersvc = "ponder-revad:19000"
-    appregistry = "ponder-revad:19000"
-    storageregistrysvc = "ponder-revad:19000"
-    preferencessvc = "ponder-revad:19000"
-    userprovidersvc = "ponder-revad:19000"
-    usershareprovidersvc = "ponder-revad:19000"
-    publicshareprovidersvc = "ponder-revad:19000"
-    ocmcoresvc = "ponder-revad:19000"
-    ocmshareprovidersvc = "ponder-revad:19000"
-    ocminvitemanagersvc = "ponder-revad:19000"
-    ocmproviderauthorizersvc = "ponder-revad:19000"
+    authregistrysvc = "localhost:19000"
+    appprovidersvc = "localhost:19000"
+    appregistry = "localhost:19000"
+    storageregistrysvc = "localhost:19000"
+    preferencessvc = "localhost:19000"
+    userprovidersvc = "localhost:19000"
+    usershareprovidersvc = "localhost:19000"
+    publicshareprovidersvc = "localhost:19000"
+    ocmcoresvc = "localhost:19000"
+    ocmshareprovidersvc = "localhost:19000"
+    ocminvitemanagersvc = "localhost:19000"
+    ocmproviderauthorizersvc = "localhost:19000"
     commit_share_to_storage_grant = false
-    datagateway = "https://mesh.pondersource.org/data"
+    datagateway = "http://localhost/data"
     transfer_expires = 6 # give it a moment
 
     [grpc.services.authregistry]
     driver = "static"
 
     [grpc.services.authregistry.drivers.static.rules]
-    basic = "ponder-revad:19000"
+    basic = "localhost:19000"
 
     [grpc.services.storageregistry]
     driver = "static"
@@ -201,22 +198,21 @@ configFiles:
     driver = "demo"
     iopsecret = "testsecret"
     wopiurl = "http://0.0.0.0:8880/"
-    wopibridgeurl = "http://mesh.pondersource.org/wopib"
+    wopibridgeurl = "http://localhost:8000/wopib"
 
     [grpc.services.appregistry]
     driver = "static"
 
     [grpc.services.appregistry.static.rules]
-    "text/plain" = "ponder-revad:19000"
-    "text/markdown" = "ponder-revad:19000"
-    "application/compressed-markdown" = "ponder-revad:19000"
-    "application/vnd.oasis.opendocument.text" = "ponder-revad:19000"
-    "application/vnd.oasis.opendocument.spreadsheet" = "ponder-revad:19000"
-    "application/vnd.oasis.opendocument.presentation" = "ponder-revad:19000"
+    "text/plain" = "localhost:19000"
+    "text/markdown" = "localhost:19000"
+    "application/compressed-markdown" = "localhost:19000"
+    "application/vnd.oasis.opendocument.text" = "localhost:19000"
+    "application/vnd.oasis.opendocument.spreadsheet" = "localhost:19000"
+    "application/vnd.oasis.opendocument.presentation" = "localhost:19000"
 
     [grpc.services.storageprovider]
     driver = "nextcloud"
-    data_server_url = "https://mesh.pondersource.org/iop/data"
 
     [grpc.services.storageprovider.drivers.nextcloud]
     endpoint = "https://OC_URL/index.php/apps/sciencemesh/"
@@ -242,9 +238,9 @@ configFiles:
     [http]
     enabled_services = ["ocmd"]
     enabled_middlewares = ["providerauthorizer", "cors"]
-    # address = "0.0.0.0:443"
-    # certfile = "/etc/revad/tls/CERT_FILE"
-    # keyfile = "/etc/revad/tls/CERT_KEY"
+    address = "0.0.0.0:443"
+    certfile = "/etc/revad/tls/CERT_FILE"
+    keyfile = "/etc/revad/tls/CERT_KEY"
 
     [http.services.dataprovider]
     driver = "localhome"
@@ -257,7 +253,6 @@ configFiles:
 
     [http.services.ocmd]
     prefix = "ocm"
-    mesh_directory_url = "https://sciencemesh.cesnet.cz/iop/meshdir/"
 
     [http.services.ocmd.config]
     host = "localhost"
@@ -281,7 +276,7 @@ configFiles:
       {
         "id": {
           "opaque_id": "4c510ada-c86b-4815-8820-42cdf82c3d51",
-          "idp": "cloud.pondersource.org"
+          "idp": "localhost:19000"
         },
         "username": "einstein",
         "secret": "relativity",
@@ -699,210 +694,6 @@ configFiles:
             "host": "127.0.0.1:19000"
           }
         ]
-      },
-      {
-        "name": "cloud.pondersource.org",
-        "full_name": "cloud.pondersource.org",
-        "organization": "pondersource",
-        "domain": "cloud.pondersource.org",
-        "homepage": "http://example.org",
-        "description": "Example cloud storage.",
-        "services": [
-          {
-            "endpoint": {
-              "type": {
-                "name": "OCM",
-                "description": "Example Open Cloud Mesh API"
-              },
-              "name": "Example - OCM API",
-              "path": "http://127.0.0.1:19001/ocm/",
-              "is_monitored": true
-            },
-            "api_version": "0.0.1",
-            "host": "http://127.0.0.1:19001/"
-          },
-          {
-            "endpoint": {
-              "type": {
-                "name": "Webdav",
-                "description": "Example Webdav API"
-              },
-              "name": "Example - Webdav API",
-              "path": "http://127.0.0.1:19001/remote.php/webdav/",
-              "is_monitored": true
-            },
-            "api_version": "0.0.1",
-            "host": "http://127.0.0.1:19001/"
-          },
-          {
-            "endpoint": {
-              "type": {
-                "name": "Gateway",
-                "description": "Example GRPC Gateway"
-              },
-              "name": "Example - GRPC Gateway",
-              "path": "127.0.0.1:19000",
-              "is_monitored": true
-            },
-            "api_version": "0.0.1",
-            "host": "127.0.0.1:19000"
-          }
-        ]
-      },
-      {
-        "name": "SURFSARA-TEST",
-        "full_name": "SURFSARA-TEST",
-        "description": "Surfsara ScienceMesh Test Instance",
-        "organization": "SURFSARA-TEST",
-        "domain": "surf-iop-rd-app-acc.data.surfsara.nl",
-        "homepage": "https://www.surf.nl/en",
-        "email": "thirsa.deboer@surf.nl",
-        "services": [
-          {
-            "host": "surf-iop-rd-app-acc.data.surfsara.nl",
-            "endpoint": {
-              "type": {
-                "name": "WEBDAV",
-                "description": "Web Distributed Authoring and Versioning Service"
-              },
-              "name": "WEBDAV",
-              "path": "https://surf-iop-rd-app-acc.data.surfsara.nl/remote.php/webdav"
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "surf-iop-rd-app-acc.data.surfsara.nl",
-            "endpoint": {
-              "type": {
-                "name": "OCM",
-                "description": "OpenCloudMesh Service"
-              },
-              "name": "OCM",
-              "path": "https://surf-iop-rd-app-acc.data.surfsara.nl/ocm"
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "grpc-surf-iop-rd-app-acc.data.surfsara.nl:443",
-            "endpoint": {
-              "type": {
-                "name": "GATEWAY",
-                "description": "CS3 Gateway Service"
-              },
-              "name": "GATEWAY",
-              "path": "https://grpc-surf-iop-rd-app-acc.data.surfsara.nl:443",
-              "is_monitored": true
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "surf-iop-rd-app-acc.data.surfsara.nl",
-            "endpoint": {
-              "type": {
-                "name": "REVAD",
-                "description": "Reva Daemon Service"
-              },
-              "name": "REVAD",
-              "path": "https://surf-iop-rd-app-acc.data.surfsara.nl",
-              "properties": {
-                "API_VERSION": "0.1.0"
-              }
-            },
-            "api_version": "0.1.0",
-            "additional_endpoints": [
-              {
-                "type": {
-                  "name": "METRICS",
-                  "description": "Prometheus metrics provider"
-                },
-                "name": "METRICS",
-                "path": "https://surf-iop-rd-app-acc.data.surfsara.nl/metrics",
-                "is_monitored": true
-              }
-            ]
-          }
-        ],
-        "properties": {
-          "OPERATOR": "SURFSARA"
-        }
-      },
-      {
-        "name": "PONDERSOURCE",
-        "full_name": "Ponder Source Foundation",
-        "description": "Ponder Source provides software development, specialized in federated data architectures.",
-        "organization": "Stichting Ponder Source",
-        "domain": "pondersource.org",
-        "homepage": "https://pondersource.org/",
-        "email": "michiel@pondersource.com",
-        "services": [
-          {
-            "host": "mesh.pondersource.org",
-            "endpoint": {
-              "type": {
-                "name": "WEBDAV",
-                "description": "Web Distributed Authoring and Versioning Service"
-              },
-              "name": "WEBDAV",
-              "path": "http://mesh.pondersource.org/iop/remote.php/webdav"
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "mesh.pondersource.org",
-            "endpoint": {
-              "type": {
-                "name": "OCM",
-                "description": "OpenCloudMesh Service"
-              },
-              "name": "OCM",
-              "path": "http://mesh.pondersource.org/iop/ocm"
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "mesh.pondersource.org",
-            "endpoint": {
-              "type": {
-                "name": "GATEWAY",
-                "description": "CS3 Gateway Service"
-              },
-              "name": "GATEWAY",
-              "path": "http://mesh.pondersource.org",
-              "is_monitored": true
-            },
-            "api_version": "0.1.0"
-          },
-          {
-            "host": "mesh.pondersource.org",
-            "endpoint": {
-              "type": {
-                "name": "REVAD",
-                "description": "Reva Daemon Service"
-              },
-              "name": "REVAD",
-              "path": "http://mesh.pondersource.org/iop",
-              "properties": {
-                "API_VERSION": "0.1.0"
-              }
-            },
-            "api_version": "0.1.0",
-            "additional_endpoints": [
-              {
-                "type": {
-                  "name": "METRICS",
-                  "description": "Prometheus metrics provider"
-                },
-                "name": "METRICS",
-                "path": "http://mesh.pondersource.org/iop/metrics",
-                "is_monitored": true
-              }
-            ]
-          }
-        ],
-        "properties": {
-          "OPERATOR": "PONDERSOURCE",
-          "ORGANIZATION": "Stichting Ponder Source"
-        }
       }
     ]
 

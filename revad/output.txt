@@ -1,0 +1,746 @@
+---
+# Source: revad/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-revad-config
+  labels:
+    helm.sh/chart: revad-1.4.0
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "v1.18.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  groups.json: |-
+    [
+      {
+        "id": {
+          "opaque_id": "sailing-lovers",
+          "idp": "localhost:19000"
+        },
+        "group_name": "sailing-lovers",
+        "mail": "sailing-lovers@example.org",
+        "display_name": "Sailing Lovers",
+        "gid_number": 123,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "4c510ada-c86b-4815-8820-42cdf82c3d51",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "violin-haters",
+          "idp": "localhost:19000"
+        },
+        "group_name": "violin-haters",
+        "mail": "violin-haters@example.org",
+        "display_name": "Violin Haters",
+        "gid_number": 456,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "4c510ada-c86b-4815-8820-42cdf82c3d51",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "radium-lovers",
+          "idp": "localhost:19000"
+        },
+        "group_name": "radium-lovers",
+        "mail": "radium-lovers@example.org",
+        "display_name": "Radium Lovers",
+        "gid_number": 789,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "f7fbf8c8-139b-4376-b307-cf0a8c2d0d9c",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "polonium-lovers",
+          "idp": "localhost:19000"
+        },
+        "group_name": "polonium-lovers",
+        "mail": "polonium-lovers@example.org",
+        "display_name": "Polonium Lovers",
+        "gid_number": 987,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "f7fbf8c8-139b-4376-b307-cf0a8c2d0d9c",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "quantum-lovers",
+          "idp": "localhost:19000"
+        },
+        "group_name": "quantum-lovers",
+        "mail": "quantum-lovers@example.org",
+        "display_name": "Quantum Lovers",
+        "gid_number": 654,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "932b4540-8d16-481e-8ef4-588e4b6b151c",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "philosophy-haters",
+          "idp": "localhost:19000"
+        },
+        "group_name": "philosophy-haters",
+        "mail": "philosophy-haters@example.org",
+        "display_name": "Philosophy Haters",
+        "gid_number": 321,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "932b4540-8d16-481e-8ef4-588e4b6b151c",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      },
+      {
+        "id": {
+          "opaque_id": "physics-lovers",
+          "idp": "localhost:19000"
+        },
+        "group_name": "physics-lovers",
+        "mail": "physics-lovers@example.org",
+        "display_name": "Physics Lovers",
+        "gid_number": 101,
+        "members": [
+          {
+            "id": {
+              "opaque_id": "4c510ada-c86b-4815-8820-42cdf82c3d51",
+              "idp": "localhost:19000"
+            }
+          },
+          {
+            "id": {
+              "opaque_id": "f7fbf8c8-139b-4376-b307-cf0a8c2d0d9c",
+              "idp": "localhost:19000"
+            }
+          },
+          {
+            "id": {
+              "opaque_id": "932b4540-8d16-481e-8ef4-588e4b6b151c",
+              "idp": "localhost:19000"
+            }
+          }
+        ]
+      }
+    ]
+    
+  oc.revad.toml: |-
+    [shared]
+    gatewaysvc = "localhost:19000"
+    
+    [grpc]
+    address = "0.0.0.0:19000"
+    
+    [grpc.services.gateway]
+    authregistrysvc = "localhost:19000"
+    appprovidersvc = "localhost:19000"
+    appregistry = "localhost:19000"
+    storageregistrysvc = "localhost:19000"
+    preferencessvc = "localhost:19000"
+    userprovidersvc = "localhost:19000"
+    usershareprovidersvc = "localhost:19000"
+    publicshareprovidersvc = "localhost:19000"
+    ocmcoresvc = "localhost:19000"
+    ocmshareprovidersvc = "localhost:19000"
+    ocminvitemanagersvc = "localhost:19000"
+    ocmproviderauthorizersvc = "localhost:19000"
+    commit_share_to_storage_grant = false
+    datagateway = "http://localhost/data"
+    transfer_expires = 6 # give it a moment
+    
+    [grpc.services.authregistry]
+    driver = "static"
+    
+    [grpc.services.authregistry.drivers.static.rules]
+    basic = "localhost:19000"
+    
+    [grpc.services.storageregistry]
+    driver = "static"
+    
+    [grpc.services.storageregistry.drivers.static]
+    home_provider = "/home"
+    
+    [grpc.services.storageregistry.drivers.static.rules]
+    "/home" = {"address" = "localhost:19000"}
+    "123e4567-e89b-12d3-a456-426655440000" = {"address" = "localhost:19000"}
+    
+    [grpc.services.usershareprovider]
+    driver = "memory"
+    
+    [grpc.services.ocmcore]
+    driver = "nextcloud"
+    
+    [grpc.services.ocmcore.drivers.nextcloud]
+    endpoint = "https://cloud.pondersource.org/index.php/apps/sciencemesh/"
+    shared_secret = "QfEW8eWwIMLQykXJxJSbEnfLuPJ74h5x"
+    mock_http = false
+    
+    [grpc.services.ocminvitemanager]
+    driver = "json"
+    
+    [grpc.services.ocmshareprovider]
+    driver = "nextcloud"
+    
+    [grpc.services.ocmshareprovider.drivers.nextcloud]
+    endpoint = "https://cloud.pondersource.org/index.php/apps/sciencemesh/"
+    shared_secret = "QfEW8eWwIMLQykXJxJSbEnfLuPJ74h5x"
+    mock_http = false
+    
+    [grpc.services.ocmproviderauthorizer]
+    driver = "json"
+    
+    [grpc.services.ocmproviderauthorizer.drivers.json]
+    providers = "/etc/revad/ocm-providers.json"
+    verify_request_hostname = true
+    
+    [grpc.services.publicshareprovider]
+    driver = "memory"
+    
+    [grpc.services.appprovider]
+    driver = "demo"
+    iopsecret = "testsecret"
+    wopiurl = "http://0.0.0.0:8880/"
+    wopibridgeurl = "http://localhost:8000/wopib"
+    
+    [grpc.services.appregistry]
+    driver = "static"
+    
+    [grpc.services.appregistry.static.rules]
+    "text/plain" = "localhost:19000"
+    "text/markdown" = "localhost:19000"
+    "application/compressed-markdown" = "localhost:19000"
+    "application/vnd.oasis.opendocument.text" = "localhost:19000"
+    "application/vnd.oasis.opendocument.spreadsheet" = "localhost:19000"
+    "application/vnd.oasis.opendocument.presentation" = "localhost:19000"
+    
+    [grpc.services.storageprovider]
+    driver = "nextcloud"
+    
+    [grpc.services.storageprovider.drivers.nextcloud]
+    endpoint = "https://cloud.pondersource.org/index.php/apps/sciencemesh/"
+    shared_secret = "QfEW8eWwIMLQykXJxJSbEnfLuPJ74h5x"
+    mock_http = false
+    
+    [grpc.services.authprovider]
+    auth_manager = "nextcloud"
+    
+    [grpc.services.authprovider.auth_managers.nextcloud]
+    endpoint = "https://cloud.pondersource.org/index.php/apps/sciencemesh/"
+    shared_secret = "QfEW8eWwIMLQykXJxJSbEnfLuPJ74h5x"
+    mock_http = false
+    
+    [grpc.services.userprovider]
+    driver = "nextcloud"
+    
+    [grpc.services.userprovider.drivers.nextcloud]
+    endpoint = "https://cloud.pondersource.org/index.php/apps/sciencemesh/"
+    shared_secret = "QfEW8eWwIMLQykXJxJSbEnfLuPJ74h5x"
+    mock_http = false
+    
+    [http]
+    enabled_services = ["ocmd"]
+    enabled_middlewares = ["providerauthorizer", "cors"]
+    address = "0.0.0.0:443"
+    certfile = "/etc/revad/tls/revaoc1.crt"
+    keyfile = "/etc/revad/tls/revaoc1.key"
+    
+    [http.services.dataprovider]
+    driver = "localhome"
+    
+    [http.services.prometheus]
+    [http.services.sysinfo]
+    
+    [http.services.dataprovider.drivers.localhome]
+    user_layout = "{{.Username}}"
+    
+    [http.services.ocmd]
+    prefix = "ocm"
+    
+    [http.services.ocmd.config]
+    host = "localhost"
+    provider = "test-revaoc1"
+    
+    [http.middlewares.providerauthorizer]
+    driver = "json"
+    
+    [http.middlewares.providerauthorizer.drivers.json]
+    providers = "/etc/revad/ocm-providers.json"
+    
+    [http.services.ocs]
+    prefix = "ocs"
+    
+    [http.services.ocdav]
+    prefix = "ocdav"
+    
+    [http.middlewares.cors]
+    
+  ocm-providers.json: |-
+    [
+      {
+        "name": "cernbox",
+        "full_name": "CERNBox",
+        "organization": "CERN",
+        "domain": "cernbox.cern.ch",
+        "homepage": "https://cernbox.web.cern.ch",
+        "description": "CERNBox provides cloud data storage to all CERN users.",
+        "services": [
+          {
+            "endpoint": {
+              "type": {
+                "name": "OCM",
+                "description": "CERNBox Open Cloud Mesh API"
+              },
+              "name": "CERNBox - OCM API",
+              "path": "http://127.0.0.1:19001/ocm/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Webdav",
+                "description": "CERNBox Webdav API"
+              },
+              "name": "CERNBox - Webdav API",
+              "path": "http://127.0.0.1:19001/remote.php/webdav/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Gateway",
+                "description": "CERNBox GRPC Gateway"
+              },
+              "name": "CERNBox - GRPC Gateway",
+              "path": "127.0.0.1:19000",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "127.0.0.1:19000"
+          }
+        ]
+      },
+      {
+        "name": "oc-cesnet",
+        "full_name": "ownCloud@CESNET",
+        "organization": "CESNET",
+        "domain": "cesnet.cz",
+        "homepage": "https://owncloud.cesnet.cz",
+        "description": "OwnCloud has been designed for individual users.",
+        "services": [
+          {
+            "endpoint": {
+              "type": {
+                "name": "OCM",
+                "description": "CESNET Open Cloud Mesh API"
+              },
+              "name": "CESNET - OCM API",
+              "path": "http://127.0.0.1:17001/ocm/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:17001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Webdav",
+                "description": "CESNET Webdav API"
+              },
+              "name": "CESNET - Webdav API",
+              "path": "http://127.0.0.1:17001/remote.php/webdav/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:17001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Gateway",
+                "description": "CESNET GRPC Gateway"
+              },
+              "name": "CESNET - GRPC Gateway",
+              "path": "127.0.0.1:17000",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "127.0.0.1:17000"
+          }
+        ]
+      },
+      {
+        "name": "example",
+        "full_name": "ownCloud@Example",
+        "organization": "Example",
+        "domain": "example.org",
+        "homepage": "http://example.org",
+        "description": "Example cloud storage.",
+        "services": [
+          {
+            "endpoint": {
+              "type": {
+                "name": "OCM",
+                "description": "Example Open Cloud Mesh API"
+              },
+              "name": "Example - OCM API",
+              "path": "http://127.0.0.1:19001/ocm/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Webdav",
+                "description": "Example Webdav API"
+              },
+              "name": "Example - Webdav API",
+              "path": "http://127.0.0.1:19001/remote.php/webdav/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Gateway",
+                "description": "Example GRPC Gateway"
+              },
+              "name": "Example - GRPC Gateway",
+              "path": "127.0.0.1:19000",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "127.0.0.1:19000"
+          }
+        ]
+      },
+      {
+        "name": "test",
+        "full_name": "ownCloud@Test",
+        "organization": "Test",
+        "domain": "test.org",
+        "homepage": "http://test.org",
+        "description": "Test cloud storage.",
+        "services": [
+          {
+            "endpoint": {
+              "type": {
+                "name": "OCM",
+                "description": "Test Open Cloud Mesh API"
+              },
+              "name": "Test - OCM API",
+              "path": "http://127.0.0.1:19001/ocm/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Webdav",
+                "description": "Test Webdav API"
+              },
+              "name": "Test - Webdav API",
+              "path": "http://127.0.0.1:19001/remote.php/webdav/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Gateway",
+                "description": "Test GRPC Gateway"
+              },
+              "name": "Test - GRPC Gateway",
+              "path": "127.0.0.1:19000",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "127.0.0.1:19000"
+          }
+        ]
+      },
+      {
+        "name": "localhost",
+        "full_name": "localhost",
+        "organization": "Example",
+        "domain": "localhost",
+        "homepage": "http://example.org",
+        "description": "Example cloud storage.",
+        "services": [
+          {
+            "endpoint": {
+              "type": {
+                "name": "OCM",
+                "description": "Example Open Cloud Mesh API"
+              },
+              "name": "Example - OCM API",
+              "path": "http://127.0.0.1:19001/ocm/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Webdav",
+                "description": "Example Webdav API"
+              },
+              "name": "Example - Webdav API",
+              "path": "http://127.0.0.1:19001/remote.php/webdav/",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "http://127.0.0.1:19001/"
+          },
+          {
+            "endpoint": {
+              "type": {
+                "name": "Gateway",
+                "description": "Example GRPC Gateway"
+              },
+              "name": "Example - GRPC Gateway",
+              "path": "127.0.0.1:19000",
+              "is_monitored": true
+            },
+            "api_version": "0.0.1",
+            "host": "127.0.0.1:19000"
+          }
+        ]
+      }
+    ]
+    
+  revad.toml: |-
+    [grpc.services.gateway]
+    [grpc.services.storageregistry]
+    [grpc.services.storageprovider]
+    [grpc.services.authprovider]
+    [grpc.services.authregistry]
+    [grpc.services.userprovider]
+    [grpc.services.groupprovider]
+    [grpc.services.usershareprovider]
+    [grpc.services.publicshareprovider]
+    [grpc.services.ocmcore]
+    [grpc.services.ocmshareprovider]
+    [grpc.services.ocminvitemanager]
+    [grpc.services.ocmproviderauthorizer]
+    
+    [http.services.datagateway]
+    [http.services.dataprovider]
+    [http.services.prometheus]
+    [http.services.ocmd]
+    [http.services.ocdav]
+    [http.services.ocs]
+    
+  users.json: |-
+    [
+      {
+        "id": {
+          "opaque_id": "4c510ada-c86b-4815-8820-42cdf82c3d51",
+          "idp": "localhost:19000"
+        },
+        "username": "einstein",
+        "secret": "relativity",
+        "mail": "einstein@example.org",
+        "display_name": "Albert Einstein",
+        "groups": ["sailing-lovers", "violin-haters", "physics-lovers"]
+      },
+      {
+        "id": {
+          "opaque_id": "f7fbf8c8-139b-4376-b307-cf0a8c2d0d9c",
+          "idp": "localhost:19000"
+        },
+        "username": "marie",
+        "secret": "radioactivity",
+        "mail": "marie@example.org",
+        "display_name": "Marie Curie",
+        "groups": ["radium-lovers", "polonium-lovers", "physics-lovers"]
+      },
+      {
+        "id": {
+          "opaque_id": "932b4540-8d16-481e-8ef4-588e4b6b151c",
+          "idp": "localhost:19000"
+        },
+        "username": "richard",
+        "secret": "superfluidity",
+        "mail": "richard@example.org",
+        "display_name": "Richard Feynman",
+        "groups": ["quantum-lovers", "philosophy-haters", "physics-lovers"]
+      }
+    ]
+---
+# Source: revad/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-revad
+  labels:
+    helm.sh/chart: revad-1.4.0
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "v1.18.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 19001
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: 19000
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+---
+# Source: revad/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-revad
+  labels:
+    helm.sh/chart: revad-1.4.0
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "v1.18.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: revad
+      app.kubernetes.io/instance: test
+  template:
+    metadata:
+      annotations:
+        checksum/config: fbd4445121479c3490773ef31cee48e52be0975871037c78f37860ffe5bd1c64
+      labels:
+        app.kubernetes.io/name: revad
+        app.kubernetes.io/instance: test
+    spec:
+      containers:
+        - name: revad
+          image: "cs3org/revad:v1.18.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 19001
+              protocol: TCP
+            - name: grpc
+              containerPort: 19000
+              protocol: TCP
+          command:
+            - /usr/bin/revad
+          args:
+              - "-c"
+              - /etc/revad/oc.revad.toml
+                
+              - "-p"
+              - "/var/run/revad.pid"
+          volumeMounts:
+            - name: test-revad-configfiles
+              mountPath: /etc/revad/
+            - name: test-revad-datadir
+              mountPath: /var/tmp/reva
+              subPath: ""
+      volumes:
+        - name: test-revad-configfiles
+          configMap:
+            name: test-revad-config
+        - name: test-revad-datadir
+          emptyDir:
+            {}
+---
+# Source: revad/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-revad-grpc
+  labels:
+    helm.sh/chart: revad-1.4.0
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "v1.18.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+spec:
+  rules:
+    - host: grpc.revad.local
+      http:
+        paths:
+          - path: /
+            backend:
+              service:
+                name: test-revad
+                port:
+                  name: grpc
+            pathType: ImplementationSpecific
+---
+# Source: revad/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-revad-http
+  labels:
+    helm.sh/chart: revad-1.4.0
+    app.kubernetes.io/name: revad
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/version: "v1.18.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+spec:
+  rules:
+    - host: http.revad.local
+      http:
+        paths:
+          - path: /
+            backend:
+              service:
+                name: test-revad
+                port:
+                  name: http
+            pathType: ImplementationSpecific
